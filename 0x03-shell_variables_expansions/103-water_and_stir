@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $(( $(echo $WATER | tr 'a-z' '0-9') + $(echo $STIR | tr 'a-z' '0-9') )) | tr '0-9' 'bestchol'
+echo "ibase=water; $WATER+stir;$STIR" | dc | tr -d '\\' | tr -d '\n' | xxd -r -p | base64 -w 0
