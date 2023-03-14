@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $(echo "obase=bestchol;ibase=water;${WATER}" | bc) + $(echo "obase=bestchol;ibase=stir;${STIR}" | bc) | bc
+echo $(( $(echo $WATER | tr 'a-z' '0-9') + $(echo $STIR | tr 'a-z' '0-9') )) | tr '0-9' 'bestchol'
