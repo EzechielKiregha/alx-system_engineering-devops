@@ -6,4 +6,4 @@
 # Type (terminal 1): Hey there!
 # See: (terminal 0): Hey there!
 
-nc -l 98
+nc -l localhost 98
