@@ -1,1 +1,49 @@
+## Link to the drawing and explanation of the process
+
 https://imgur.com/eu69ccD
+
+This setup provides a secure and scalable web infrastructure, with firewalls positioned 
+before each server to protect them from potential threats and monitoring clients to 
+ensure the health and performance of the servers. Now Let's have a detailed process 
+from user request to response from the servers.
+
+- User's Computer: The user's computer sends a request to access the website or 
+application.
+
+- Load Balancer (HAProxy): The request is first received by the load balancer, which 
+distributes the traffic across multiple servers for load balancing and high 
+availability.
+
+- Firewall 1 (Before Nginx): Before reaching the Nginx web server, the traffic passes 
+through Firewall 1, which filters and monitors incoming requests to ensure they are 
+safe.
+
+- Nginx Web Server: Nginx serves as the web server, handling HTTP requests from users. 
+It can also act as a reverse proxy, forwarding requests to the application server.
+
+- Firewall 2 (Before Application Server): The dynamic requests forwarded by Nginx to 
+the application server pass through Firewall 2, which provides an additional layer of 
+security.
+
+- Application Server: The application server hosts your application code base and 
+processes dynamic requests, executing business logic, and interacting with the database.
+
+- Firewall 3 (Before MySQL Database): Any requests from the application server to the 
+MySQL database are filtered and monitored by Firewall 3 to protect the database.
+
+- MySQL Database: MySQL is used to store and manage data for the application. It stores 
+information such as user data, product listings, and other data necessary for the 
+application to function.
+## For HTTPS Support.
+- SSL Certificate: The SSL certificate is used to secure the connection between the 
+user's computer and the web server, ensuring that data transmitted over the network is 
+encrypted and secure.
+
+- Monitoring Clients: The monitoring clients (data collectors) collect monitoring data 
+from the servers and send it to monitoring services like Sumo Logic for analysis and 
+reporting.
+
+
+
+
+
