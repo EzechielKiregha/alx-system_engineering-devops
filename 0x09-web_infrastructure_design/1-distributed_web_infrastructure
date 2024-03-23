@@ -1,1 +1,34 @@
+Link Drawing and explanation of the process
+
 https://imgur.com/FCxTf9T
+
+In this setup,
+the load balancer ensures that incoming traffic is evenly distributed across the Nginx 
+web servers for optimal performance and scalability. Nginx serves static content 
+directly and forwards dynamic requests to the application server. The application 
+server processes these requests, interacts with the database as needed, and generates 
+responses that are sent back to the user's computer via the Nginx web servers
+
+- User's Computer: This is where the user accesses the website or application from.
+
+- Load Balancer (HAProxy): The load balancer distributes incoming traffic across multiple
+Nginx web servers. HAProxy is a popular choice for load balancing due to its 
+reliability and performance.
+
+- Nginx Web Servers: Nginx serves as the web server, handling HTTP requests from users. 
+It can also act as a reverse proxy, forwarding requests to the application server. 
+Nginx is known for its high performance and scalability, making it a popular choice for 
+web servers.
+
+- Application Server: The application server hosts my application code base. It is 
+responsible for processing dynamic requests, executing business logic, and interacting 
+with the database. Common application servers include Apache Tomcat, WildFly, and Node.
+js, among others.
+
+- MySQL Database: MySQL is used to store and manage data for the application. It is a 
+popular choice for relational databases and is commonly used in web applications for 
+its reliability and scalability.
+
+- Application Files: These are the files that make up the application code base. They 
+contain the logic and functionality of my application, including HTML, CSS, 
+JavaScript, and server-side code (e.g., PHP, Python, Java).
