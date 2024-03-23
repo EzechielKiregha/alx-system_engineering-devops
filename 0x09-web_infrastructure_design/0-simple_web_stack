@@ -1,1 +1,12 @@
+link drawing and short explaination
+
 https://imgur.com/a/m8w0yMf
+
+In this diagram, 
+the user's computer sends a request to www.foobar.com. The DNS resolves the domain name 
+to the server's IP address (8.8.8.8). The request is then routed to the web server 
+(Nginx), which serves static content and forwards dynamic requests to the application 
+server. The application server processes the request using your code base and interacts 
+with the database (MySQL) to retrieve or store data. The application files contain your 
+code base, which is responsible for the application's logic and functionality.
+
