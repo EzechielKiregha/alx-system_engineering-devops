@@ -4,25 +4,23 @@
 #+    Returns a page containing "Hello World!" when queried
 #++    at the root with a curl GET request.
 
-#  updates the package lists for available software packages.
-apt-get update
-# installs the Nginx web server.
-apt-get install -y nginx
+# Update package list
+sudo apt-get update
 
-# Creates the /etc/nginx/html directory, which will serve as the document root directory for Nginx.
-mkdir /etc/nginx/html
-#  creates an empty index.html file inside the /etc/nginx/html directory.
-touch /etc/nginx/html/index.html
-#  sets the content of the index.html file to "Hello World!" using the echo command.
-echo "Hello World!" > /etc/nginx/html/index.html
-# Sets Nginx to listen on port 80 and serve files from the /etc/nginx/html directory.
-printf %s "server {
-     listen      80;
-     listen      [::]:80 default_server;
-     root        /etc/nginx/html;
-     index       index.html index.htm;
-}
-" > /etc/nginx/sites-available/default
+# Install nginx
+sudo apt-get install nginx -y
 
-# Restarts the Nginx service to apply the configuration changes.
-service nginx restart
+# Configure nginx to listen on port 80
+sudo sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
+
+# Verify nginx is running
+if pgrep nginx >/dev/null; then
+     echo 'Nginx is running'
+else
+     # Restart nginx
+     sudo service nginx restart
+     # sudo kill -s HUP $(pgrep nginx)
+fi
+
+# Create index.html with "Hello World!"
+echo 'Hello World!' | sudo tee /var/www/html/index.html
