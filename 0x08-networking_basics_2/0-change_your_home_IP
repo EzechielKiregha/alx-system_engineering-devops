@@ -4,5 +4,5 @@
 # https://web.archive.org/web/20171117023601/http://blog.jonathanargentiero.com/docker-sed-cannot-rename-etcsedl8ysxl-device-or-resource-busy/
 
 cp /etc/hosts hosts.new
-sed -i s/127.*$/127.0.0.2\\tlocalhost\\n8.8.8.8\\tfacebook.com/g hosts.new
+sed -i s/127.*$/127.0.0.1\\tlocalhost\\n8.8.8.8\\tfacebook.com/g hosts.new
 cp -f hosts.new /etc/hosts
