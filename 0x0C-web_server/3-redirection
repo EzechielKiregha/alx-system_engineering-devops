@@ -5,29 +5,30 @@
 #++    at the root with a curl GET request.
 #++    Redirects /redirect_me to another page with a 301 Moved Permanently response.
 
-# Check if running as root
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root (with sudo)"
-    exit 1
-fi
-
 # Update package list
-apt-get update
+sudo apt-get update
 # Install nginx
-apt-get install -y nginx
+sudo apt-get install -y nginx
 
 # Create index.html with "Hello World!"
-echo 'Hello World!' | sudo tee /etc/nginx/html/index.html
+echo '
+    <html>
+    <head></head>
+    <body>
+        <h1>Hello World!</h1>
+    </body>
+    </html>
+    ' | sudo tee /etc/nginx/html/index.html
 
 # Configure Nginx to listen on port 80 and serve files from /etc/nginx/html
 cat << EOF > /etc/nginx/sites-available/redirect_me
 server {
     listen 80;
     listen [::]:80;
-    server_name 322021-web-01;
+    server_name _;
 
     location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        return 301 https://youtube.com;
     }
 
     location / {
@@ -38,10 +39,10 @@ server {
 EOF
 
 # Enable the new site configuration
-ln -sf /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
 
 # Test Nginx configuration
-nginx -t
+sudo nginx -t
 
 # Restart Nginx
-service nginx restart
+sudo service nginx restart
