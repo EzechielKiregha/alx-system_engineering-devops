@@ -50,8 +50,14 @@ defaults
 
 frontend http_front
     bind *:80
+    # bind *:443 ssl crt /etc/letsencrypt/live/www.ezechielkiregha.tech/fullchain.pem
+    bind *:443 ssl crt /etc/letsencrypt/live/www.ezechielkiregha.tech/haproxy_combined.pem
+    reqadd X-Forwarded-Proto:\ https
     stats uri /haproxy?stats
     default_backend http_back
+
+    # Redirect HTTP requests to HTTPS
+    redirect scheme https if !{ ssl_fc }
 
 backend http_back
     balance roundrobin
