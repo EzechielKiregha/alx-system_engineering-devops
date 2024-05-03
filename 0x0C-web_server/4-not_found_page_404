@@ -15,23 +15,30 @@ echo '
         Co-Founder and CEO at <strong>Kiregha Corporation.</strong></h2>
     </body>
     </html>
-    ' | sudo tee /etc/nginx/html/index.html
+    ' | sudo tee /var/www/html/index.html
 
 # Performing a "moved permanently redirection" (301)
 # new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/ezechielkiregha permanent;"
 # sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
 
-
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/custom_conf
+sudo chmod 777 /etc/nginx/sites-available/custom_conf
 # Creating a 404 Custom error page
-echo "Ceci n'est pas une page" | sudo tee /etc/nginx/html/404.html
-
-cat << EOF > /etc/nginx/sites-available/custom_conf
+echo "
+    <html>
+    <head></head>
+    <body>
+        <h1>CE CI N'EST PAS UNE PAGE</h1>
+    </body>
+    </html>
+    " | sudo tee /var/www/html/404.html
+sudo cat << EOF > /etc/nginx/sites-available/custom_conf
 server {
     listen 80;
     listen [::]:80;
     server_name _;
 
-    root /etc/nginx/html;
+    root /var/www/html;
 
     location /redirect_me {
         return 301 https://youtube.com/@AI_Mirror_Company;
@@ -52,9 +59,9 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo ln -sf /etc/nginx/sites-available/custom_conf /etc/nginx/sites-enabled/
 
 
-# new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/etc\/nginx\/html;\n\t\tinternal;\n\t}"
+new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
 
-# sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/custom_conf
+sudo sed -i "s/error_page 404 /404.html;/$new_string/g" /etc/nginx/sites-enabled/custom_conf
 
 # Testing configurations for syntax errors
 sudo nginx -t
