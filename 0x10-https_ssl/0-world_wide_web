@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Function to display subdomain information
+display_info() {
+    domain=$1
+    subdomain=$2
+    answer=$(dig +short $subdomain.$domain)
+    record_type=$(dig +short $subdomain.$domain | awk '{ if (NR == 1) print "A"; else print "CNAME"; }')
+    echo "The subdomain $subdomain is a $record_type record and points to $answer"
+}
+
+domain=$1
+subdomain=$2
+
+if [ -z "$domain" ]; then
+    echo "Error: Domain name not provided."
+    exit 1
+fi
+
+if [ -z "$subdomain" ]; then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+else
+    subdomains=("$subdomain")
+fi
+
+for sub in "${subdomains[@]}"
+do
+    display_info $domain $sub
+done
