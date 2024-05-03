@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script installs Nginx, starts it, and sets it up to listen on port 80
-sudo apt-get install -y nginx
-echo '<html><head></head><body><h1>Welcome to Nginx!</h1></body></html>' | sudo tee /var/www/html/index.html > /dev/null
-sudo service nginx stop
+# debugging nginx (service (init) must say that nginx is not running)
+  sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+  service nginx restart
+  pkill -o nginx
