@@ -1,60 +1,61 @@
 #!/usr/bin/env bash
 # Using puppet we create http response header 
 
-# Define a class for custom HTTP header configuration
-class custom_http_response_header {
-    # Install facter package to get hostname
-    package { 'facter':
-        ensure => installed,
-    }
+# Install Nginx package
+package { 'nginx':
+  ensure => installed,
+}
 
-    # Define a custom fact to get the hostname
-    file { '/etc/facter/facts.d/hostname.txt':
-        ensure  => file,
-        content => "hostname=${::hostname}",
-    }
+# Allow HTTP traffic
+firewall { 'allow http':
+  port   => 80,
+  proto  => 'tcp',
+  action => 'accept',
+}
 
-    # Install Nginx package
-    package { 'nginx':
-        ensure => installed,
-    }
-
-    # Configure Nginx with custom HTTP header
-    file { '/etc/nginx/sites-available/default':
-        ensure  => file,
-        content => "
+# Define Nginx configuration
+file { '/etc/nginx/sites-available/custom_conf':
+  ensure  => present,
+  content => "
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
+    listen 80;
+    listen [::]:80;
     server_name _;
 
-    root /var/www/html;
+    location /redirect_me {
+        return 301 https://youtube.com/@AI_Mirror_Company;
+    }
+
+    error_page 404 /404.html;
+
+    location /404.html {
+        root /var/www/html;
+        internal;
+    }
 
     location / {
+        root /var/www/html;
         index index.html index.htm;
-        add_header X-Served-By ${::hostname};
+        add_header X-Served-By $hostname;
     }
 }
 ",
-        require => Package['nginx'],
-    }
-
-    # Enable the custom configuration
-    file { '/etc/nginx/sites-enabled/default':
-        ensure  => 'link',
-        target  => '/etc/nginx/sites-available/default',
-        require => File['/etc/nginx/sites-available/default'],
-        notify  => Service['nginx'],
-    }
-
-    # Restart Nginx service
-    service { 'nginx':
-        ensure  => running,
-        enable  => true,
-        require => Package['nginx'],
-    }
 }
 
-# Include the custom HTTP header class
-include custom_http_response_header
+# Create a symbolic link to enable the site
+file { '/etc/nginx/sites-enabled/custom_conf':
+  ensure => link,
+  target => '/etc/nginx/sites-available/custom_conf',
+}
+
+# Remove default Nginx configuration
+file { '/etc/nginx/sites-enabled/default':
+  ensure => absent,
+}
+
+# Restart Nginx service
+service { 'nginx':
+  ensure => running,
+  enable => true,
+  require => File['/etc/nginx/sites-enabled/custom_conf'],
+}
