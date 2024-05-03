@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script configure a brand new ubuntu server and adds response header
 
 # Updating Packages before performing installations
 sudo apt-get update
