@@ -1,29 +1,43 @@
 #!/usr/bin/env bash
+# write a Bash script that will display information about the subdomains
 
-# Function to display subdomain information
-display_info() {
-    domain=$1
-    subdomain=$2
-    answer=$(dig +short $subdomain.$domain)
-    record_type=$(dig +short $subdomain.$domain | awk '{ if (NR == 1) print "A"; else print "CNAME"; }')
-    echo "The subdomain $subdomain is a $record_type record and points to $answer"
+dns_config () {
+    script=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+    echo "$2 $script" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
 }
 
-domain=$1
-subdomain=$2
-
-if [ -z "$domain" ]; then
-    echo "Error: Domain name not provided."
-    exit 1
+if [ "$#" == 1 ]
+then
+  dns_config "$1" "www"
+  dns_config "$1" "lb-01"
+  dns_config "$1" "web-01"
+  dns_config "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+  dns_config "$1" "$2"
 fi
 
-if [ -z "$subdomain" ]; then
-    subdomains=("www" "lb-01" "web-01" "web-02")
-else
-    subdomains=("$subdomain")
-fi
-
-for sub in "${subdomains[@]}"
-do
-    display_info $domain $sub
-done
+# # In this script I write Function to display subdomain information
+# # Function to display subdomain information
+# display_info() {
+#     domain=$1
+#     subdomain=$2
+#     answer=$(dig +short $subdomain.$domain)
+#     record_type=$(dig +short $subdomain.$domain | awk '{ if (NR == 1) print "A"; else print "CNAME"; }')
+#     echo "The subdomain $subdomain is a $record_type record and points to $answer"
+# }
+# domain=$1
+# subdomain=$2
+# if [ -z "$domain" ]; then
+#     echo "Error: Domain name not provided."
+#     exit 1
+# fi
+# if [ -z "$subdomain" ]; then
+#     subdomains=("www" "lb-01" "web-01" "web-02")
+# else
+#     subdomains=("$subdomain")
+# fi
+# for sub in "${subdomains[@]}"
+# do
+#     display_info $domain $sub
+# done
