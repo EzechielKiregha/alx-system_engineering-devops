@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# The default incoming policy was changed to 'deny',
+# which means all incoming traffic is blocked except
+# for the specified ports (22, 80, and 443)
+
+# Reset ufw to default settings
+sudo ufw --force reset
+
+# Set default policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH, HTTP, and HTTPS
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Enable ufw
+sudo ufw --force enable
+
+# Display the status
+sudo ufw status verbose
