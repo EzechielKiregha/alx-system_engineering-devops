@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # run nginx as nginx user
-
 pkill -f apache2
 chmod 644 /etc/nginx/nginx.conf
 sed -i "1i user nginx;" /etc/nginx/nginx.conf
