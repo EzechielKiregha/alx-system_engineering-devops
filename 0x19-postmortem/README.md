@@ -1,6 +1,7 @@
 # Postmortem Report: Web Stack Debugging Project Issue
 
-![Server Overload Cartoon](https://www.serveroverload.com/images/cartoon.png)
+![postmortem](https://github.com/EzechielKiregha/alx-system_engineering-devops/assets/96211998/a8a3b6d2-d0b3-45ec-b5ce-af083e767e98)
+
 
 ## Issue Summary
 
@@ -27,6 +28,7 @@ The root cause was a misconfiguration in the Nginx server settings, which led to
 - **11:15 AM UTC:** Issue resolved, normal service restored.
 
 ## Root Cause and Resolution
+![nginx](https://github.com/EzechielKiregha/alx-system_engineering-devops/assets/96211998/1a39b282-da8d-4391-98ac-786bf940234a)
 
 **Detailed Explanation of the Issue:**  
 The primary issue was traced back to a configuration change in the Nginx server settings made during a recent deployment. The settings were inadvertently set to allow an excessively high number of concurrent connections per worker process. This led to the server being overwhelmed, as it could not efficiently handle the volume of simultaneous requests, resulting in significant slowdowns and timeouts for users.
@@ -42,6 +44,8 @@ The resolution involved reverting the Nginx configuration to a more conservative
 3. **Capacity Planning:** Conduct a thorough capacity planning exercise to understand the limits of our current infrastructure and plan for future growth.
 
 **Task List:**
+![works-doesnt-work](https://github.com/EzechielKiregha/alx-system_engineering-devops/assets/96211998/83355f0f-2de7-4a8c-b7fe-446c185ce4ac)
+
 1. **Patch Nginx Server:** Apply the correct settings and patch any identified vulnerabilities.
 2. **Add Monitoring on Server Memory:** Implement detailed memory usage monitoring to prevent overloads.
 3. **Review Deployment Processes:** Update deployment checklists to include configuration validation steps.
