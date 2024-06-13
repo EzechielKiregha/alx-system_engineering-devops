@@ -1,3 +1,4 @@
+!/usr/bin/env bash
 # Nginx Configured to proxy requests
 
 server {

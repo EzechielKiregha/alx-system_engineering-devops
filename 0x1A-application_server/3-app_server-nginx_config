@@ -1,3 +1,4 @@
+!/usr/bin/env bash
 # Nginx configured to serve dynamic content
 
 server {
