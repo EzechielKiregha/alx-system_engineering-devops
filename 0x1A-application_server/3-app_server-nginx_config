@@ -1,24 +1,46 @@
-!/usr/bin/env bash
-# Nginx configured to serve dynamic content
+#!/usr/bin/env bash
 
+# Install Nginx and Gunicorn
+sudo apt update
+sudo apt install -y nginx python3-pip
+pip3 install gunicorn flask
+
+# Create the Nginx configuration file
+cat << EOF | sudo tee /etc/nginx/sites-available/3-app_server-nginx_config
 server {
     listen 80;
     server_name _;
 
     location /airbnb-onepage {
         proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 
     location /airbnb-dynamic/number_odd_or_even {
-        rewrite ^/airbnb-dynamic/number_odd_or_even/(.*)$ /number_odd_or_even/$1 break;
+        rewrite ^/airbnb-dynamic/number_odd_or_even/(.*)\$ /number_odd_or_even/\$1 break;
         proxy_pass http://127.0.0.1:5001;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 }
+EOF
+
+# remove previous nginx configuration
+sudo rm /etc/nginx/sites-enabled/2-app_server-nginx_config
+
+# Enable the Nginx configuration by creating a symbolic link
+sudo ln -s /etc/nginx/sites-available/3-app_server-nginx_config /etc/nginx/sites-enabled/
+
+# Test Nginx configuration and restart Nginx
+sudo nginx -t && sudo systemctl restart nginx
+
+# Start Gunicorn instances using tmux
+tmux new-session -d -s gunicorn5000 'gunicorn --bind 0.0.0.0:5000 web_flask.0-hello_route:app'
+tmux new-session -d -s gunicorn5001 'gunicorn --bind 0.0.0.0:5001 web_flask.6-number_odd_or_even:app'
+
+echo "Setup complete. Nginx is configured and Gunicorn instances are running."
